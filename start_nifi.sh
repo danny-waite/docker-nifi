@@ -16,7 +16,6 @@ do_cluster_node_configure() {
   sed -i "s/clientPort=.*/clientPort=${ZK_CLIENT_PORT}/g" ${NIFI_HOME}/conf/zookeeper.properties
   ZK_CONNECT_STRING=$(echo $ZK_NODES | sed -e "s/,/:${ZK_CLIENT_PORT},/g" -e "s/$/:${ZK_CLIENT_PORT}/g")
 
-  sed -i "s/nifi\.web\.http\.host=.*/nifi.web.http.host=${HOSTNAME}/g" ${NIFI_HOME}/conf/nifi.properties
   sed -i "s/nifi\.cluster\.protocol\.is\.secure=true/nifi.cluster.protocol.is.secure=false/g" ${NIFI_HOME}/conf/nifi.properties
   sed -i "s/nifi\.cluster\.is\.node=false/nifi.cluster.is.node=true/g" ${NIFI_HOME}/conf/nifi.properties
   sed -i "s/nifi\.cluster\.node\.address=.*/nifi.cluster.node.address=${HOSTNAME}/g" ${NIFI_HOME}/conf/nifi.properties
@@ -48,6 +47,12 @@ sed -i "s/nifi\.ui\.banner\.text=.*/nifi.ui.banner.text=${BANNER_TEXT}/g" ${NIFI
 do_site2site_configure
 
 if [ ! -z "$IS_CLUSTER_NODE" ]; then do_cluster_node_configure; fi
+
+sed -i "s/nifi\.web\.http\.host=.*/nifi.web.http.host=${HOSTNAME}/g" ${NIFI_HOME}/conf/nifi.properties
+  
+if [ -z "$HTTP_PORT" ]; then HTTP_PORT="8080"; fi
+sed -i "s/nifi\.web\.http\.port=.*/nifi.web.http.port=${HTTP_PORT}/g" ${NIFI_HOME}/conf/nifi.properties
+sed -i "s/nifi\.web\.https\.port=.*/nifi.web.https.port=${HTTPS_PORT}/g" ${NIFI_HOME}/conf/nifi.properties
 
 tail -F ${NIFI_HOME}/logs/nifi-app.log &
 ${NIFI_HOME}/bin/nifi.sh run
