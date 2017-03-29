@@ -19,7 +19,7 @@ do_cluster_node_configure() {
   sed -i "s/nifi\.web\.http\.host=.*/nifi.web.http.host=${HOSTNAME}/g" ${NIFI_HOME}/conf/nifi.properties
   
   if [ -z "$HTTP_PORT" ]; then HTTP_PORT="8080"; fi
-  if [ -z "$HTTPS_PORT" ]; then HTTPS_PORT="443"; fi
+  if [ -z "$HTTPS_PORT" ]; then HTTPS_PORT="8443"; fi
   sed -i "s/nifi\.web\.http\.port=.*/nifi.web.http.port=${HTTP_PORT}/g" ${NIFI_HOME}/conf/nifi.properties
   sed -i "s/nifi\.web\.https\.port=.*/nifi.web.https.port=${HTTPS_PORT}/g" ${NIFI_HOME}/conf/nifi.properties
   
